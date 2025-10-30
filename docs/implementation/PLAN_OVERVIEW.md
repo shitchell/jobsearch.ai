@@ -4,7 +4,12 @@ This document provides a high-level overview of the implementation plan for the 
 
 ## Overview
 
-The implementation is organized into sequential phases, where each phase builds upon the last. Each phase is broken down into smaller "chunks" that are independently testable and leave the codebase in a working state. This approach allows for incremental development and testing.
+The implementation plan provides a complete, ground-up plan for the Job Search AI system. It is organized into chunks that can be implemented sequentially, where each chunk is:
+- Independently testable
+- Completable within ~150k token context
+- Leaves codebase in working state (even if feature-incomplete)
+
+**Target Audience:** Any developer (or AI agent) with no prior context can use this plan to build the entire system from scratch.
 
 **Documentation References:**
 - [UX Flow](../core/UX_FLOW.md) - User experience details
@@ -14,7 +19,66 @@ The implementation is organized into sequential phases, where each phase builds 
 
 ---
 
-## Implementation Phases & Chunks
+## Project Structure
+
+```
+jobsearch.ai/
+├── backend/
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── main.py                 # FastAPI app
+│   │   ├── models/                 # Pydantic models
+│   │   │   ├── __init__.py
+│   │   │   ├── job.py              # JobListing, SearchRequest, etc.
+│   │   │   ├── company.py          # Company, ResearchResult
+│   │   │   ├── provider.py         # Provider interfaces
+│   │   │   └── display.py          # DisplayMetadata
+│   │   ├── services/               # Business logic
+│   │   │   ├── __init__.py
+│   │   │   ├── job_aggregation.py
+│   │   │   └── company_research.py
+│   │   ├── providers/              # Plugin directory
+│   │   │   ├── job_sources/
+│   │   │   │   └── indeed/
+│   │   │   └── research/
+│   │   │       ├── glassdoor/
+│   │   │       └── scam_detector/
+│   │   ├── db/                     # Database
+│   │   │   ├── __init__.py
+│   │   │   ├── models.py           # SQLAlchemy models
+│   │   │   └── session.py
+│   │   ├── config.py               # Settings
+│   │   └── api/                    # API endpoints
+│   │       ├── __init__.py
+│   │       ├── search.py
+│   │       └── research.py
+│   ├── tests/                      # Pytest tests
+│   │   ├── unit/
+│   │   ├── integration/
+│   │   └── e2e/
+│   ├── alembic/                    # Database migrations
+│   ├── requirements.txt
+│   ├── pyproject.toml
+│   └── config.ini                  # Configuration (not in git)
+├── frontend/
+│   ├── index.html
+│   ├── css/
+│   │   └── styles.css
+│   └── js/
+│       ├── app.js                  # Main application class
+│       ├── event-bus.js            # Event system
+│       ├── api-client.js           # Backend communication
+│       ├── ui.js                   # UI rendering
+│       └── field-renderer.js       # Metadata-driven display
+├── docs/                           # Documentation
+│   ├── core/
+│   └── implementation/
+└── README.md
+```
+
+---
+
+## Implementation Phases & Chunk
 
 The project is broken down into the following major phases and their constituent chunks:
 
