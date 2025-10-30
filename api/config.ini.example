@@ -1,0 +1,16 @@
+[api]
+host = 0.0.0.0
+port = 8000
+
+[jobsearch]
+db_url = sqlite:///./jobsearch.db
+cache_ttl_days = 30
+ignored_providers =
+require_all_providers = false
+
+# API Keys (fill these in for config.ini)
+openai_api_key =
+indeed_api_key =
+glassdoor_api_key =
+linkedin_api_key =
+ziprecruiter_api_key =
